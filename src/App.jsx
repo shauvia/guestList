@@ -1,76 +1,79 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getGuests, getSingleGuest } from "./guests";
 
-let guests = [
-  {
-    id: 1,
-    name: "Penny Nickel",
-    email: "penny@quarter.com",
-    phone: "123-456-7890",
-    bio: "oatmeal advocate",
-    job: "Global Accounts Engineer",
-  },
-  {
-    id: 2,
-    name: "Puszek Kłebuszek",
-    email: "Puszek@quarter.com",
-    phone: "987-654-6543",
-    bio: "koci advocate",
-    job: "Global Accounts Myszka",
-  },
-  {
-    id: 3,
-    name: "Kizia Mizia",
-    email: "Mizia@kizia.com",
-    phone: "475-473-9987",
-    bio: "dziabeł",
-    job: "Global Dziabeł",
-  },
-];
+function GuestList({ setGuestId }) {
+  const [guests, setGuests] = useState([]);
 
-function GuestList({ setGuest }) {
+  useEffect(() => {
+    const syncGuests = async () => {
+      const data = await getGuests();
+      console.log("data", data);
+      setGuests(data);
+    };
+    syncGuests();
+  }, []);
   return (
-    <ul>
+    <ul className="guest-list">
       {guests.map((guest) => (
         <li
           key={guest.id}
           onClick={() => {
             console.log("selectedGuest: ", guest);
-            setGuest(guest);
+            setGuestId(guest.id);
           }}
         >
-          {guest.name} {guest.email} {guest.phone}
+          <strong>{guest.name}</strong>
+          <span>{guest.email}</span>
+          <br />
+          <span>{guest.phone}</span>
         </li>
       ))}
     </ul>
   );
 }
 
-function GuestDetails({ oneGuest, setGuest }) {
+function GuestDetails({ oneGuestId, setGuestId }) {
+  let [oneGuest, setOneGuest] = useState(null);
+
+  useEffect(() => {
+    const syncGuestDetails = async () => {
+      if (!oneGuestId) return;
+      const data = await getSingleGuest(oneGuestId);
+      setOneGuest(data);
+    };
+
+    syncGuestDetails();
+  }, [oneGuestId]);
+
+  if (!oneGuest) {
+    return <p>Select a recipe to see more details.</p>;
+  }
+
   return (
-    <section>
+    <section className="guest-details">
       <h2>Name: {oneGuest.name}</h2>
       <p>Email: {oneGuest.email}</p>
       <p>Phone: {oneGuest.phone}</p>
       <p>Bio: {oneGuest.bio}</p>
       <p>Job: {oneGuest.job}</p>
-      <button onClick={() => setGuest(null)}>Back</button>
+      <button onClick={() => setGuestId(null)}>Back</button>
     </section>
   );
 }
 
 export default function App() {
-  const [guest, setGuest] = useState(null);
+  const [guestId, setGuestId] = useState(null);
 
   return (
     <>
-      <h1>Guest List</h1>
-      {!guest ? (
+      {!guestId ? (
         <>
-          <GuestList setGuest={setGuest} />
+          <h1>Guest List</h1>
+          <GuestList setGuestId={setGuestId} />
           <p>Select a recipe to see more details.</p>
         </>
       ) : (
-        <GuestDetails oneGuest={guest} setGuest={setGuest} />
+        <GuestDetails oneGuestId={guestId} setGuestId={setGuestId} />
       )}
     </>
   );

@@ -1,4 +1,5 @@
-// import { API } from "./constants";
+import { API } from "./constants";
+
 export async function getGuests() {
   try {
     const response = await fetch(API + "/guests");

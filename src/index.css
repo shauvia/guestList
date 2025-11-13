@@ -1,0 +1,42 @@
+ul.guest-list {
+  list-style: none;
+  padding: 0;
+}
+
+ul.guest-list li {
+  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  transition: background 0.2s;
+}
+
+ul.guest-list li:hover {
+  background-color: #e0e0e0;
+}
+
+ul.guest-list li strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.guest-details {
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  max-width: 400px;
+  margin: 20px auto;
+  background: #f9f9f9;
+}
+
+.guest-details h2 {
+  margin-top: 0;
+}
+
+.guest-details button {
+  margin-top: 12px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
